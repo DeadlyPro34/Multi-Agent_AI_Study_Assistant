@@ -1,44 +1,38 @@
-# SynapseAI – Multi-Agent AI Study Assistant
+# SynapseAI - Multi-Agent AI Study Assistant
 
-SynapseAI is a modern, futuristic, and premium AI SaaS application built to revolutionize the way students study. Powered by a multi-agent AI architecture, it helps you digest heavy study materials, organize your schedules, and test your knowledge interactively.
-
-![SynapseAI Cover](assets/logo/cover-placeholder.png)
+## Overview
+SynapseAI is a premium, multi-agent study assistant designed to transform static study materials into dynamic, interactive learning experiences. By leveraging advanced AI orchestration, it analyzes uploaded documents and provides personalized study plans, detailed explanations, concise summaries, and interactive quizzes. All of this is wrapped in a sleek, modern glassmorphic interface to ensure a distraction-free and engaging study environment.
 
 ## Features
-
-- **Multi-Agent Collaboration:** Dedicated agents for Planning, Explaining, Summarizing, and Quizzing.
-- **RAG-Powered Chat:** Upload your PDFs, and chat with your documents directly. The system retrieves precise context for accurate answers.
-- **Automated Quizzes:** Generate MCQs and short-answer questions from uploaded materials to test your knowledge.
-- **Study Planner:** Create structured, optimized study plans tailored to your syllabus.
-- **Premium UI/UX:** A futuristic glassmorphic dark-mode dashboard providing a real AI SaaS feel.
-- **Conversational Memory:** AI remembers context throughout your study session.
+- **Intelligent Document Processing**: Upload and process PDF study materials seamlessly.
+- **Multi-Agent Orchestration**: Utilizes specialized AI agents for distinct educational tasks:
+  - *Planner Agent*: Creates structured study schedules and topic outlines.
+  - *Explainer Agent*: Breaks down complex concepts into easy-to-understand explanations.
+  - *Summarizer Agent*: Condenses large volumes of text into key takeaways.
+  - *Quizzer Agent*: Generates interactive quizzes to test knowledge retention.
+- **RAG Pipeline**: Integrates ChromaDB for fast document querying and accurate context retrieval.
+- **Modern UI/UX**: A highly responsive, glassmorphic frontend built with Streamlit.
+- **Robust Task Management**: Asynchronous processing and background task handling to ensure the UI remains smooth during heavy AI generation.
 
 ## Tech Stack
+- **Frontend**: Streamlit
+- **Backend/Logic**: Python
+- **AI Framework**: CrewAI, LangChain
+- **LLM**: Google Gemini 3.1 Pro
+- **Vector Database**: ChromaDB
 
-- **Frontend:** Streamlit
-- **Backend Framework:** Python
-- **AI Agent Framework:** CrewAI
-- **LLM:** Google Gemini API
-- **Embeddings:** Sentence Transformers
-- **Vector Database:** ChromaDB
-- **PDF Processing:** PyPDF2
-
-## Architecture Overview
-
-SynapseAI utilizes a pipeline where user documents are processed, chunked, and embedded into a ChromaDB vector store. When users interact with the app, their queries are augmented with relevant document contexts (RAG) and passed to specialized CrewAI agents.
-
-## Installation Guide
+## Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/synapse-ai.git
+   git clone https://github.com/YOUR_USERNAME/synapse-ai.git
    cd synapse-ai
    ```
 
-2. **Create a virtual environment (Optional but recommended)**
+2. **Create a virtual environment (Recommended)**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -46,34 +40,49 @@ SynapseAI utilizes a pipeline where user documents are processed, chunked, and e
    pip install -r requirements.txt
    ```
 
-4. **Environment Setup**
-   Copy `.env.example` to `.env` and configure your API keys.
-   ```bash
-   cp .env.example .env
+4. **Setup environment variables**
+   Create a `.env` file in the root directory and configure your API key:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
-   *Add your Google Gemini API key to the `.env` file.*
 
-## Running the Application
+5. **Run the project**
+   ```bash
+   streamlit run app.py
+   ```
 
-Start the Streamlit application by running:
-```bash
-streamlit run app.py
+## Usage
+1. Launch the application and open the provided `localhost` link in your browser.
+2. Upload a PDF document containing your study material via the sidebar or main upload section.
+3. Select the AI Agent you wish to interact with (Planner, Explainer, Summarizer, or Quizzer).
+4. Use the chat interface to ask questions, request summaries, or take generated quizzes based on your document.
+
+## Project Structure
+```text
+synapse-ai/
+├── agents/             # CrewAI agent logic and role definitions
+├── assets/             # Static assets like logos and images
+├── components/         # Modular Streamlit UI components (Navbar, Cards, Upload)
+├── database/           # Local ChromaDB vector storage
+├── styles/             # Custom CSS files for glassmorphic styling
+├── utils/              # Helper functions (e.g., PDF text extraction)
+├── app.py              # Main Streamlit application entry point
+├── requirements.txt    # Required Python packages
+└── .env                # Environment variables configuration
 ```
 
-## Deployment Guide
-
-### Streamlit Cloud
-1. Push this repository to GitHub.
-2. Go to [Streamlit Community Cloud](https://streamlit.io/cloud).
-3. Click "New app", select your repository, branch, and set the main file path to `app.py`.
-4. Add your `.env` secrets in the Streamlit Cloud advanced settings.
-5. Deploy!
+## Configuration
+The following environment variable is required to run the AI agents:
+- `GEMINI_API_KEY`: Your Google Gemini API key.
 
 ## Future Improvements
-- Voice input / Text-to-speech integration
-- Study streak tracker & productivity analytics
-- Authentication system
-- Flashcard generation and export functionality
+- Support for additional file formats (e.g., DOCX, PPTX).
+- User authentication to save and resume individual study sessions.
+- Integration of web search tools to allow agents to supplement document knowledge with real-time web data.
+- Implementation of a student progress tracking and analytics dashboard.
 
-## Contribution Guidelines
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## Contributing
+Contributions are always welcome! Feel free to fork the repository, create a feature branch, and submit a pull request.
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
