@@ -1,0 +1,575 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Round');
+
+/* Core Variables - Light Theme */
+:root {
+    --bg-main: #F5F3FF; /* Light Lavender */
+    --bg-card: #FFFFFF; /* White */
+    --bg-sidebar: #FFFFFF; /* White */
+    --primary-indigo: #4F46E5; /* Indigo */
+    --primary-lavender: #C4B5FD; /* Lavender */
+    --dark-indigo: #312E81; /* Dark Indigo */
+    --text-main: #374151; /* Gray Text */
+    --text-secondary: #6B7280; /* Lighter Gray */
+    --border-color: #E0E7FF; /* Very light indigo border */
+    --glow: 0 4px 20px rgba(79, 70, 229, 0.15);
+}
+
+/* Full Reset & Base Style */
+.stApp {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hide Streamlit Default elements but KEEP the sidebar toggle button */
+#MainMenu { visibility: hidden !important; }
+.stDeployButton, .stAppDeployButton, [data-testid="stAppDeployButton"] { display: none !important; }
+footer { visibility: hidden !important; }
+
+/* Global Containers / Layout Adjustment */
+.block-container {
+    padding-top: 3rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* Sidebar Styling */
+[data-testid="stSidebar"] {
+    background-color: var(--bg-sidebar) !important;
+    border-right: 1px solid var(--border-color);
+}
+
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] h2 {
+    color: var(--dark-indigo);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin-bottom: 0;
+}
+
+/* Custom compact navigation buttons */
+.nav-btn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    margin: 4px 0;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Sidebar Specific Layout Compression */
+[data-testid="stSidebar"] {
+    padding-top: 0 !important;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    padding-top: 2rem !important;
+}
+
+[data-testid="stSidebar"] .stButton {
+    margin-bottom: -12px !important;
+}
+
+.stButton > button {
+    background: var(--bg-main) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 8px 16px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.03) !important;
+    font-size: 0.9rem !important;
+    height: auto !important;
+}
+
+.stButton > button:hover {
+    border-color: var(--primary-indigo) !important;
+    background: #EEF2FF !important;
+    transform: translateY(-1px);
+    box-shadow: var(--glow) !important;
+    color: var(--primary-indigo) !important;
+}
+
+/* Primary Action Button Highlight */
+div[data-testid="stFormSubmitButton"] button, 
+.stButton > button[kind="primary"],
+.stButton > button[data-testid="baseButton-primary"],
+button[data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg, var(--primary-indigo), var(--primary-lavender)) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: var(--glow) !important;
+}
+
+/* Sleek Cards for Features */
+.glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    min-height: 220px;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.glass-card:hover {
+    border-color: var(--primary-lavender);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1), 0 4px 6px -2px rgba(79, 70, 229, 0.05);
+    transform: translateY(-2px);
+}
+
+.glass-card h3 {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    margin-top: 12px !important;
+    margin-bottom: 8px !important;
+    color: var(--dark-indigo) !important;
+}
+
+.glass-card p {
+    font-size: 0.875rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.6 !important;
+}
+
+/* Typography Cleanup */
+h1, h2, h3, h4, h5 {
+    letter-spacing: -0.025em !important;
+    font-weight: 800 !important;
+    color: var(--dark-indigo) !important;
+}
+
+/* Custom Navbar replacement - Compact and floating */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+}
+
+.dashboard-title {
+    font-size: 1.875rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.05em !important;
+    margin: 0 !important;
+    color: var(--dark-indigo) !important;
+}
+
+.dashboard-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Premium Reorganized File Uploader (Dropzone) */
+[data-testid="stFileUploader"] {
+    background: var(--bg-card) !important;
+    border: 2px dashed rgba(79, 70, 229, 0.25) !important;
+    border-radius: 16px !important;
+    padding: 8px !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: var(--primary-indigo) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.08) !important;
+}
+
+/* Center and reorganize all child layouts inside the Dropzone */
+[data-testid="stFileUploader"] section {
+    padding: 20px 20px !important;
+    background-color: transparent !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 8px !important;
+}
+
+/* The main label text at the top: Center and emphasize it */
+[data-testid="stFileUploader"] label {
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    color: var(--dark-indigo) !important;
+    margin-bottom: 4px !important;
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+/* Stack button and descriptor text vertically */
+[data-testid="stFileUploader"] [data-testid="stFileUploadDropzone"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+}
+
+/* Style constraints text (Made Darker and much more legible!) */
+[data-testid="stFileUploader"] div, 
+[data-testid="stFileUploader"] p, 
+[data-testid="stFileUploader"] span, 
+[data-testid="stFileUploader"] small,
+[data-testid="stFileUploadDropzone"] p,
+[data-testid="stFileUploadDropzone"] span {
+    color: #334155 !important; /* Dark slate for ultra-legible constraint text */
+    text-align: center !important;
+    font-weight: 500 !important;
+}
+
+/* Premium Upload Button Styling - Fix white background conflict */
+[data-testid="stFileUploader"] button {
+    background: #EEF2FF !important; /* Soft indigo tint */
+    border: 1px solid var(--primary-indigo) !important;
+    border-radius: 8px !important;
+    padding: 6px 20px !important;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1) !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-testid="stFileUploader"] button,
+[data-testid="stFileUploader"] button * {
+    color: var(--dark-indigo) !important; /* Ensure dark, visible text */
+    font-weight: 600 !important;
+}
+
+[data-testid="stFileUploader"] button:hover {
+    background: #E0E7FF !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+}
+
+/* Universal Text Contrast Overrides for forced light mode */
+.stMarkdown, .stMarkdown p, .stMarkdown span, .stMarkdown li, label {
+    color: var(--text-main) !important;
+}
+
+/* Alerts */
+.stAlert {
+    background: #EEF2FF !important;
+    border: 1px solid var(--primary-lavender) !important;
+    color: var(--text-main) !important;
+}
+
+/* Inputs / Chat Inputs */
+.stChatInputContainer, [data-testid="stChatInput"], .stChatInput {
+    background: rgba(30, 41, 59, 0.8) !important;
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Sub-text adjustments inside inputs */
+.stChatInput textarea {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.stChatInput textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Left-align all sidebar buttons to prevent "zig-zag" centered alignment */
+[data-testid="stSidebar"] .stButton > button {
+    justify-content: flex-start !important;
+    padding-left: 20px !important;
+}
+
+[data-testid="stSidebar"] .stButton > button div {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+[data-testid="stSidebar"] .stButton > button span {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Fix invisible white spinner text against light backgrounds */
+[data-testid="stSpinner"], 
+[data-testid="stSpinner"] div,
+[data-testid="stSpinner"] p {
+    color: #1E293B !important;
+    font-weight: 500 !important;
+}
+
+/* Force interactive radio button option text to be highly visible dark slate */
+[data-testid="stRadio"] label p,
+div[role="radiogroup"] label p,
+div[role="radiogroup"] [data-testid="stMarkdownContainer"] p {
+    color: #1E293B !important;
+    font-weight: 500 !important;
+}
+
+/* Premium Markdown Table Styling */
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 24px 0 !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid var(--border-color) !important;
+    background: var(--bg-card) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+}
+
+th {
+    background-color: var(--primary-indigo) !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    padding: 14px 18px !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.02em !important;
+}
+
+td {
+    padding: 14px 18px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+}
+
+tr:last-child td {
+    border-bottom: none !important;
+}
+
+tr:nth-child(even) td {
+    background-color: rgba(79, 70, 229, 0.03) !important; /* Subtle brand tint */
+}
+
+tr:hover td {
+    background-color: rgba(79, 70, 229, 0.06) !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Premium Styling for Chat Messages: Removes harsh dark gray blocks & ensures dark text contrast */
+[data-testid="stChatMessage"] {
+    background-color: transparent !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+    border: 1px solid transparent !important;
+}
+
+/* Neutral, ultra-subtle tint for the user message container to differentiate without heavy blocks */
+[data-testid="stChatMessage"][data-testid*="user"] {
+    background-color: rgba(79, 70, 229, 0.04) !important;
+    border: 1px solid rgba(79, 70, 229, 0.08) !important;
+}
+
+/* Clean minimalist look for the AI assistant response block */
+[data-testid="stChatMessage"][data-testid*="assistant"] {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+/* FORCE Chat Content Typography to render in rich visible Slate */
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] strong,
+[data-testid="stChatMessageContent"] * {
+    color: #1E293B !important;
+    font-weight: 450 !important;
+}
+
+/* Floating Neat Chat Input Capsule - Precision DOM Targeted Style */
+/* 1. The Global Outer Fixed Bar - Make 100% Transparent to clear dark overlay */
+[data-testid="stChatInput"] {
+    background: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+
+/* 2. Intermediate Constraint Wrapper - Force it wide and center it */
+[data-testid="stChatInput"] > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 840px !important;
+    margin: 0 auto !important;
+    padding: 16px 24px 24px 24px !important; /* Elegant Spacing above and below */
+}
+
+/* 3. The Actual Interactive Pill (Grandchild Div) - The true input capsule */
+[data-testid="stChatInput"] > div > div {
+    background: #2F2F2F !important; /* Elegant Signature Dark Grey */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 32px !important; /* High-end Pill Capsule */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    padding: 6px 12px 6px 8px !important; /* Proper balance */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    flex-direction: row !important; /* LOCK it to horizontal */
+    align-items: center !important;
+    width: 100% !important;
+}
+
+/* High-Fidelity ChatGPT Plus (+) Icon Injection in the Pill */
+[data-testid="stChatInput"] > div > div::before {
+    content: "+";
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    color: #B4B4B4 !important; /* Soft muted gray */
+    font-size: 24px !important;
+    font-weight: 300 !important;
+    padding: 0 12px 0 14px !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center !important;
+    user-select: none;
+}
+
+[data-testid="stChatInput"] > div > div:focus-within {
+    background: #232323 !important; /* Deeper charcoal focus */
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Formatter for the textarea component (Light ash text on dark field) */
+[data-testid="stChatInput"] textarea {
+    color: #ECECF1 !important; /* Muted off-white premium text */
+    font-size: 0.95rem !important;
+    font-weight: 400 !important;
+    background: transparent !important;
+    caret-color: #FFFFFF !important;
+    line-height: 1.5 !important;
+}
+
+/* Custom placeholder color override for the textarea */
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #9B9B9B !important;
+    opacity: 0.8 !important;
+}
+
+/* High-Fidelity Circular White Action Button on the right */
+[data-testid="stChatInput"] button {
+    background-color: #FFFFFF !important; /* High-contrast white circular button */
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    margin-right: 4px !important;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease !important;
+}
+
+/* Deep Obsidian Arrow inside the white Send button */
+[data-testid="stChatInput"] button svg {
+    fill: #171717 !important;
+    stroke: #171717 !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+[data-testid="stChatInput"] button:hover {
+    transform: scale(1.08) !important;
+    opacity: 0.95 !important;
+    background-color: #FFFFFF !important;
+}
+
+[data-testid="stChatInput"] button:disabled {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    cursor: not-allowed;
+    opacity: 0.5 !important;
+}
+
+[data-testid="stChatInput"] button:disabled svg {
+    fill: rgba(255, 255, 255, 0.5) !important;
+    stroke: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Local Cache Hash Explicit Override - Forces 100% container width to override Streamlit defaults */
+.st-emotion-cache-1y34ygi {
+    width: 100% !important;
+    padding: 0 !important; /* Remove Streamlit's default heavy padding */
+    max-width: 840px !important;
+    min-width: auto !important;
+}
+/* Overriding default Streamlit button cache classes for consistent premium design */
+.st-emotion-cache-1anq8dj {
+    background-color: #FFFFFF !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 20px !important;
+    color: var(--dark-indigo) !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+}
+
+.st-emotion-cache-1anq8dj:hover {
+    border-color: var(--primary-indigo) !important;
+    background-color: #F8FAFC !important;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08) !important;
+    transform: translateY(-1px);
+}
+
+/* Refined Popover Styles - Backgrounds disabled per user request */
+div[data-testid="stPopoverBody"], 
+div[data-testid="stPopoverContent"] {
+    /* background-color: #FFFFFF !important; */
+    /* background: #FFFFFF !important; */
+    border-radius: 16px !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18) !important;
+    color: var(--text-main) !important;
+}
+
+div[data-testid="stPopoverContent"] p,
+div[data-testid="stPopoverContent"] span,
+div[data-testid="stPopoverContent"] label {
+    color: var(--text-main) !important;
+}
