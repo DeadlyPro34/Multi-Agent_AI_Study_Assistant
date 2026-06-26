@@ -1,15 +1,15 @@
-# SynapseAI - Multi-Agent AI Study Assistant
+# SynapseAI - AI Study Assistant
 
 ## Overview
-SynapseAI is a premium, multi-agent study assistant designed to transform static study materials into dynamic, interactive learning experiences. By leveraging advanced AI orchestration, it analyzes uploaded documents and provides personalized study plans, detailed explanations, concise summaries, and interactive quizzes. All of this is wrapped in a sleek, modern glassmorphic interface to ensure a distraction-free and engaging study environment.
+SynapseAI is a premium study assistant designed to transform static study materials into dynamic, interactive learning experiences. By leveraging specialized AI routing and Google Gemini, it analyzes uploaded documents and provides personalized study plans, detailed explanations, concise summaries, and interactive quizzes. All of this is wrapped in a sleek, modern glassmorphic interface to ensure a distraction-free and engaging study environment.
 
 ## Features
 - **Intelligent Document Processing**: Upload and process PDF study materials seamlessly.
-- **Multi-Agent Orchestration**: Utilizes specialized AI agents for distinct educational tasks:
-  - *Planner Agent*: Creates structured study schedules and topic outlines.
-  - *Explainer Agent*: Breaks down complex concepts into easy-to-understand explanations.
-  - *Summarizer Agent*: Condenses large volumes of text into key takeaways.
-  - *Quizzer Agent*: Generates interactive quizzes to test knowledge retention.
+- **Specialized AI Modes**: Utilizes distinct LLM prompting strategies for different educational tasks:
+  - *Study Planner*: Creates structured study schedules and topic outlines.
+  - *Expert Explainer*: Breaks down complex concepts into easy-to-understand explanations.
+  - *Intelligent Summarizer*: Condenses large volumes of text into key takeaways.
+  - *Quiz Engine*: Generates interactive quizzes to test knowledge retention.
 - **RAG Pipeline**: Integrates ChromaDB for fast document querying and accurate context retrieval.
 - **Modern UI/UX**: A highly responsive, glassmorphic frontend built with Streamlit.
 - **Robust Task Management**: Asynchronous processing and background task handling to ensure the UI remains smooth during heavy AI generation.
@@ -17,8 +17,8 @@ SynapseAI is a premium, multi-agent study assistant designed to transform static
 ## Tech Stack
 - **Frontend**: Streamlit
 - **Backend/Logic**: Python
-- **AI Framework**: CrewAI, LangChain
-- **LLM**: Google Gemini 3.1 Pro
+- **AI Framework**: Google GenAI SDK (Direct Routing)
+- **LLM**: Google Gemini 2.0 Flash
 - **Vector Database**: ChromaDB
 
 ## Installation
@@ -60,7 +60,7 @@ SynapseAI is a premium, multi-agent study assistant designed to transform static
 ## Project Structure
 ```text
 synapse-ai/
-├── agents/             # CrewAI agent logic and role definitions
+├── agents/             # LLM routing and specialized role definitions
 ├── assets/             # Static assets like logos and images
 ├── components/         # Modular Streamlit UI components (Navbar, Cards, Upload)
 ├── database/           # Local ChromaDB vector storage

@@ -96,7 +96,7 @@ def main():
         with col1:
             feature_card("Semantic Search & RAG", "Upload your PDFs and retrieve instantaneous contextual data.", "folder")
         with col2:
-            feature_card("Multi-Agent Brains", "Collaborative AI agents specialize in parsing dynamic syllabi.", "psychology")
+            feature_card("Specialized AI Modes", "Focused AI study modes specialize in parsing dynamic syllabi.", "psychology")
         with col3:
             feature_card("Optimized Analytics", "Intelligent revision timetables generated autonomously.", "auto_graph")
             
@@ -126,7 +126,7 @@ def main():
     elif current_page == "AI Chat":
         st.markdown("""
         <div style='margin-bottom: 1.5rem;'>
-            <h1 class='dashboard-title'>Expert Explainer Agent</h1>
+            <h1 class='dashboard-title'>Expert Explainer</h1>
             <p class='dashboard-subtitle'>Ask granular questions from your codebase or textbooks.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -153,7 +153,7 @@ def main():
     elif current_page == "Study Planner":
         st.markdown("""
         <div style='margin-bottom: 1.5rem;'>
-            <h1 class='dashboard-title'>Autonomous Scheduler Agent</h1>
+            <h1 class='dashboard-title'>AI Study Planner</h1>
             <p class='dashboard-subtitle'>Instantly formulate structured timelines based on custom milestones.</p>
         </div>
         """, unsafe_allow_html=True)
