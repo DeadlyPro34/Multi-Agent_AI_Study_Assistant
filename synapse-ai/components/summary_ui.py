@@ -3,6 +3,21 @@ from utils.rag_pipeline import VectorStore
 from agents.crew_setup import run_study_crew
 from utils.async_manager import start_background_task, check_task_status
 
+@st.fragment(run_every=1.5)
+def auto_poll_summary():
+    if st.session_state.get("summary_task_id"):
+        task = check_task_status(st.session_state.summary_task_id)
+        if task:
+            if task["status"] == "COMPLETED":
+                st.session_state.summary_content = task["result"]
+                st.session_state.summary_active = True
+                st.session_state.summary_task_id = None
+                st.rerun()
+            elif task["status"] == "FAILED":
+                st.error(f"🚨 Summarization Failed: {task['result']}")
+                st.session_state.summary_task_id = None
+                st.rerun()
+
 def render_summary_ui():
     # Initialize state
     if "summary_active" not in st.session_state:
@@ -12,21 +27,8 @@ def render_summary_ui():
     if "summary_task_id" not in st.session_state:
         st.session_state.summary_task_id = None
 
-    # --- POLLING FOR ACTIVE BACKGROUND SUMMARY TASK ---
     if st.session_state.summary_task_id:
-        task = check_task_status(st.session_state.summary_task_id)
-        if task:
-            if task["status"] == "COMPLETED":
-                st.session_state.summary_content = task["result"]
-                st.session_state.summary_active = True
-                st.session_state.summary_task_id = None
-                st.rerun()
-            elif task["status"] == "FAILED":
-                st.error(f"🚨 Agent Generation Failed: {task['result']}")
-                st.session_state.summary_task_id = None
-                # Wait before allowing retry
-                if st.button("Retry Setting Up Summary", use_container_width=True):
-                    st.rerun()
+        auto_poll_summary()
 
     st.markdown("""
     <style>
@@ -66,7 +68,6 @@ def render_summary_ui():
 </div>
 """, unsafe_allow_html=True)
         
-        # Streamlit forces manual reruns to fetch state. Let's add a neat manual check button or spinner!
         with st.spinner("Agent processing document sectors..."):
             st.button("🔄 Check Work Progress Now", use_container_width=True)
 
@@ -94,14 +95,14 @@ and format below to have our summarizer agent extract the exact essentials.
 
         st.markdown("<div style='margin-top: 1rem;'></div>", unsafe_allow_html=True)
 
-        if st.button("📚 Generate Study Summary", type="primary", use_container_width=True, icon=":material/auto_stories:"):
+        if st.button("📚 Generate Study Summary", type="primary", use_container_width=True, icon=":material/auto_stories:", disabled=bool(st.session_state.summary_task_id)):
             # Fetch deep context synchronously (fast step)
             with st.spinner("Analyzing knowledge base context..."):
                 vector_store = VectorStore()
                 query = summary_topic if summary_topic.strip() else "Course Chapter Syllabus Core Outline"
-                context_chunks = vector_store.search(query, top_k=2)
+                context_chunks = vector_store.search(query, top_k=5)
                 context_str = "\n---\n".join(context_chunks) if context_chunks else ""
-                context_str = context_str[:1500]
+                context_str = context_str[:3500]
 
             task_desc = (
                 f"Generate a comprehensive {summary_depth} summary for the topic: '{summary_topic if summary_topic.strip() else 'Full Document Material'}'. "

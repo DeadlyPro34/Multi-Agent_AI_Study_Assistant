@@ -4,6 +4,21 @@ from agents.crew_setup import run_study_crew
 
 from utils.async_manager import start_background_task, check_task_status
 
+@st.fragment(run_every=1.5)
+def auto_poll_planner():
+    if st.session_state.get("planner_task_id"):
+        task = check_task_status(st.session_state.planner_task_id)
+        if task:
+            if task["status"] == "COMPLETED":
+                st.session_state.plan_content = task["result"]
+                st.session_state.plan_active = True
+                st.session_state.planner_task_id = None
+                st.rerun()
+            elif task["status"] == "FAILED":
+                st.error(f"🚨 Planner Agent Generation Failed: {task['result']}")
+                st.session_state.planner_task_id = None
+                st.rerun()
+
 def render_planner_ui():
     # Initialize session state
     if "plan_active" not in st.session_state:
@@ -13,19 +28,9 @@ def render_planner_ui():
     if "planner_task_id" not in st.session_state:
         st.session_state.planner_task_id = None
 
-    # --- POLLING FOR ACTIVE BACKGROUND PLANNER TASK ---
     if st.session_state.planner_task_id:
-        task = check_task_status(st.session_state.planner_task_id)
-        if task:
-            if task["status"] == "COMPLETED":
-                st.session_state.plan_content = task["result"]
-                st.session_state.plan_active = True
-                st.session_state.planner_task_id = None
-                st.rerun()
-            elif task["status"] == "FAILED":
-                st.error(f"🚨 Plan Generation Failed: {task['result']}")
-                st.session_state.planner_task_id = None
-
+        auto_poll_planner()
+        
     st.markdown("""
     <style>
     .blueprint-container {
@@ -97,14 +102,14 @@ tutor network will construct an optimized academic calendar tailored directly to
 
         st.markdown("<div style='margin-top: 1rem;'></div>", unsafe_allow_html=True)
         
-        if st.button("🚀 Generate Personalized Blueprint", type="primary", use_container_width=True, icon=":material/calendar_month:"):
+        if st.button("🚀 Generate Personalized Blueprint", type="primary", use_container_width=True, icon=":material/calendar_month:", disabled=bool(st.session_state.planner_task_id)):
             with st.spinner("Querying context parameters..."):
                 # Fetch context
                 vector_store = VectorStore()
                 search_query = subject if subject.strip() else "Syllabus Outline Chapter Topics"
-                context_chunks = vector_store.search(search_query, top_k=2)
+                context_chunks = vector_store.search(search_query, top_k=5)
                 context_str = "\n---\n".join(context_chunks) if context_chunks else ""
-                context_str = context_str[:1500]
+                context_str = context_str[:3500]
 
             task_desc = (
                 f"Create an academic study plan for '{subject if subject.strip() else 'Uploaded Material'}'. "

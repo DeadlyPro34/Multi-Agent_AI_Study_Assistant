@@ -19,20 +19,44 @@ def extract_json_quiz(text):
         match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', text, re.DOTALL | re.IGNORECASE)
         if match:
             return json.loads(match.group(1))
-    except:
-        pass
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"JSON parsing error (block match): {e}")
 
     try:
         # Last resort: find text between first { and last }
         match = re.search(r'(\{.*\})', text, re.DOTALL)
         if match:
             return json.loads(match.group(1))
-    except:
-        pass
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"JSON parsing error (braces match): {e}")
         
     return None
 
 from utils.async_manager import start_background_task, check_task_status
+
+@st.fragment(run_every=1.5)
+def auto_poll_quiz():
+    if st.session_state.get("quiz_task_id"):
+        task = check_task_status(st.session_state.quiz_task_id)
+        if task:
+            if task["status"] == "COMPLETED":
+                response_text = task["result"]
+                quiz_data = extract_json_quiz(response_text)
+                if quiz_data and "questions" in quiz_data and len(quiz_data["questions"]) > 0:
+                    st.session_state.quiz_questions = quiz_data["questions"]
+                    st.session_state.quiz_active = True
+                    st.session_state.quiz_submitted = False
+                    st.session_state.quiz_user_answers = {}
+                    st.session_state.quiz_task_id = None
+                    st.rerun()
+                else:
+                    st.error("❌ Failed to parse a valid quiz from the agent output. Please retry with a different topic.")
+                    st.session_state.quiz_task_id = None
+                    st.rerun()
+            elif task["status"] == "FAILED":
+                st.error(f"🚨 Quiz Generation Failed: {task['result']}")
+                st.session_state.quiz_task_id = None
+                st.rerun()
 
 def render_quiz_ui():
     # Initialize session state variables for Quiz Mode
@@ -49,26 +73,11 @@ def render_quiz_ui():
     if "quiz_task_id" not in st.session_state:
         st.session_state.quiz_task_id = None
 
-    # --- POLLING FOR ACTIVE BACKGROUND QUIZ TASK ---
+    if "quiz_task_id" not in st.session_state:
+        st.session_state.quiz_task_id = None
+
     if st.session_state.quiz_task_id:
-        task = check_task_status(st.session_state.quiz_task_id)
-        if task:
-            if task["status"] == "COMPLETED":
-                response_text = task["result"]
-                quiz_data = extract_json_quiz(response_text)
-                if quiz_data and "questions" in quiz_data and len(quiz_data["questions"]) > 0:
-                    st.session_state.quiz_questions = quiz_data["questions"]
-                    st.session_state.quiz_active = True
-                    st.session_state.quiz_submitted = False
-                    st.session_state.quiz_user_answers = {}
-                    st.session_state.quiz_task_id = None
-                    st.rerun()
-                else:
-                    st.error("❌ Failed to parse a valid quiz from the agent output. Please retry with a different topic.")
-                    st.session_state.quiz_task_id = None
-            elif task["status"] == "FAILED":
-                st.error(f"🚨 Quiz Generation Failed: {task['result']}")
-                st.session_state.quiz_task_id = None
+        auto_poll_quiz()
 
     # Display custom UI Header
     st.markdown("""
@@ -158,14 +167,13 @@ build a custom quiz specifically tailored to your curriculum.
 
         st.markdown("<div style='margin-top: 1rem;'></div>", unsafe_allow_html=True)
         
-        if st.button("🚀 Generate Dynamic Quiz", type="primary", use_container_width=True, icon=":material/rocket_launch:"):
-            with st.spinner("Analyzing knowledge base for exam context..."):
-                # 1. Get DB Context
+        if st.button("🚀 Generate Quiz", type="primary", use_container_width=True, icon=":material/quiz:", disabled=bool(st.session_state.quiz_task_id)):
+            with st.spinner("Extracting parameters from knowledge base..."):
                 vector_store = VectorStore()
                 search_query = quiz_topic if quiz_topic.strip() else "Course Outline Syllabus Summary"
-                context_chunks = vector_store.search(search_query, top_k=2)
+                context_chunks = vector_store.search(search_query, top_k=5)
                 context_str = "\n---\n".join(context_chunks) if context_chunks else ""
-                context_str = context_str[:1500]
+                context_str = context_str[:3500]
                 
             # 2. Formulate precise Prompt
             task_desc = (

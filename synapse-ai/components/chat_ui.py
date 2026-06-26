@@ -5,6 +5,14 @@ from agents.crew_setup import run_study_crew
 
 from utils.async_manager import start_background_task, check_task_status
 
+@st.fragment(run_every=1.5)
+def auto_poll_chat():
+    if st.session_state.get("chat_task_id"):
+        task = check_task_status(st.session_state.chat_task_id)
+        if task and task["status"] in ["COMPLETED", "FAILED"]:
+            st.rerun()
+
+
 def render_chat_ui(agent_mode="explain"):
     st.markdown(f"### 💬 SynapseAI Assistant - Mode: {agent_mode.capitalize()}")
     
@@ -111,23 +119,26 @@ Ask complex questions, dissect formulas, or seek step-by-step guides from your u
 
             # Determine Context
             with st.spinner("Analyzing context..."):
+                if st.session_state.chat_task_id:
+                    st.warning("A task is already running. Please wait.")
+                    st.stop()
+                
                 is_greeting = prompt.strip().lower().rstrip('.?!') in ["hi", "hello", "hey", "greetings", "yo", "hello there", "howdy", "hola"]
                 if is_greeting:
                     context_str = "[SPECIAL MODE]: The user is just saying hello. Greet them warmly as SynapseAI."
                 else:
                     vector_store = VectorStore()
-                    context_chunks = vector_store.search(prompt, top_k=2)
+                    context_chunks = vector_store.search(prompt, top_k=5)
                     context_str = "\n---\n".join(context_chunks) if context_chunks else "No specific context found."
-                    context_str = context_str[:1500]
+                    context_str = context_str[:3500]
             
             # Spawn Async Task
             task_title = prompt[:30] + "..." if len(prompt) > 30 else prompt
-            task_id = start_background_task("chat", task_title, run_study_crew, prompt, agent_mode, context_str)
+            chat_history = st.session_state.get("messages", [])
+            task_id = start_background_task("chat", task_title, run_study_crew, prompt, agent_mode, context_str, chat_history)
             st.session_state.chat_task_id = task_id
             st.rerun()
 
     # Automatically poll if a task is running to avoid manual clicking
     if st.session_state.chat_task_id:
-        import time
-        time.sleep(1.5)
-        st.rerun()
+        auto_poll_chat()

@@ -30,8 +30,9 @@ def start_background_task(task_type: str, topic: str, target_func, *args, **kwar
         log_file = "async_debug.log"
         
         def log(msg):
-            with open(log_file, "a", encoding="utf-8") as f:
-                f.write(f"[{datetime.now().isoformat()}] [Task {task_id}] {msg}\n")
+            if os.getenv("DEBUG") == "true":
+                with open(log_file, "a", encoding="utf-8") as f:
+                    f.write(f"[{datetime.now().isoformat()}] [Task {task_id}] {msg}\n")
 
         log(f"STARTING background task of type '{task_type}' for topic '{topic}'")
         
@@ -78,24 +79,32 @@ def drain_completed_tasks():
     notifications_to_add = []
     
     with _TASKS_LOCK:
+        now = datetime.now()
+        keys_to_delete = []
         for tid, data in BACKGROUND_TASKS.items():
-            if data["status"] in ["COMPLETED", "FAILED"] and not data["notified"]:
-                data["notified"] = True
-                
-                icon = "✅" if data["status"] == "COMPLETED" else "⚠️"
-                completion_time = data["completed_at"].strftime("%I:%M %p") if data["completed_at"] else "Just now"
-                
-                summary_title = data["topic"] if data["topic"].strip() else "Material"
-                status_msg = "finished generating!" if data["status"] == "COMPLETED" else "encountered an error."
-                
-                notifications_to_add.append({
-                    "id": tid,
-                    "type": data["type"],
-                    "topic": summary_title,
-                    "status": data["status"],
-                    "message": f"{icon} {data['type'].title()} for '{summary_title}' {status_msg}",
-                    "result": data["result"],
-                    "timestamp": completion_time
-                })
+            if data["status"] in ["COMPLETED", "FAILED"]:
+                if not data["notified"]:
+                    data["notified"] = True
+                    
+                    icon = "✅" if data["status"] == "COMPLETED" else "⚠️"
+                    completion_time = data["completed_at"].strftime("%I:%M %p") if data["completed_at"] else "Just now"
+                    
+                    summary_title = data["topic"] if data["topic"].strip() else "Material"
+                    status_msg = "finished generating!" if data["status"] == "COMPLETED" else "encountered an error."
+                    
+                    notifications_to_add.append({
+                        "id": tid,
+                        "type": data["type"],
+                        "topic": summary_title,
+                        "status": data["status"],
+                        "message": f"{icon} {data['type'].title()} for '{summary_title}' {status_msg}",
+                        "result": data["result"],
+                        "timestamp": completion_time
+                    })
+                elif data["completed_at"] and (now - data["completed_at"]).total_seconds() > 60:
+                    keys_to_delete.append(tid)
+                    
+        for tid in keys_to_delete:
+            del BACKGROUND_TASKS[tid]
                 
     return notifications_to_add
