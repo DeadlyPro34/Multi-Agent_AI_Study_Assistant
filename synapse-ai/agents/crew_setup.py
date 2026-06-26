@@ -60,7 +60,10 @@ def planner_prompt(query: str, context: str) -> str:
     )
 
 def quiz_prompt(query: str, context: str) -> str:
-    return f"""You are an AI quiz generator. {query}
+    return f"""You are an AI quiz generator.
+
+TASK:
+{query}
 
 CONTEXT:
 {context if context and context.strip() else "Use your general knowledge about the topic."}

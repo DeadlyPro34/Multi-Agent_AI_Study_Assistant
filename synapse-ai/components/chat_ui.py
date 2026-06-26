@@ -9,19 +9,6 @@ from utils.async_manager import start_background_task, check_task_status
 def auto_poll_chat():
     if st.session_state.get("chat_task_id"):
         task = check_task_status(st.session_state.chat_task_id)
-        if task and task["status"] in ["COMPLETED", "FAILED"]:
-            st.rerun()
-
-
-def render_chat_ui(agent_mode="explain"):
-    st.markdown(f"### 💬 SynapseAI Assistant - Mode: {agent_mode.capitalize()}")
-    
-    if "chat_task_id" not in st.session_state:
-        st.session_state.chat_task_id = None
-
-    # --- POLLING FOR ACTIVE BACKGROUND CHAT TASK ---
-    if st.session_state.chat_task_id:
-        task = check_task_status(st.session_state.chat_task_id)
         if task:
             if task["status"] == "COMPLETED":
                 add_message("assistant", task["result"])
@@ -31,6 +18,13 @@ def render_chat_ui(agent_mode="explain"):
                 add_message("assistant", f"⚠️ Error: {task['result']}")
                 st.session_state.chat_task_id = None
                 st.rerun()
+
+
+def render_chat_ui(agent_mode="explain"):
+    st.markdown(f"### 💬 SynapseAI Assistant - Mode: {agent_mode.capitalize()}")
+    
+    if "chat_task_id" not in st.session_state:
+        st.session_state.chat_task_id = None
 
     history = get_conversation_history()
     

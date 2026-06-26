@@ -67,7 +67,7 @@ def render_planner_ui():
 <div style='font-size: 3.5rem; margin-bottom: 1.5rem;'>📅🧩⚡</div>
 <h2 style='margin-top:0; color: var(--dark-indigo);'>Building Your Optimization Roadmap...</h2>
 <p style='color: var(--text-secondary); font-size: 0.95rem; max-width: 600px; margin: 0 auto 1.5rem auto;'>
-    Our Multi-Agent Tutor Planners are actively structuring schedules and computing intensity loads.
+    The AI Study Planner is actively structuring schedules and computing intensity loads.
 </p>
 <div style='background: rgba(79, 70, 229, 0.05); border: 1px dashed var(--primary-indigo); border-radius: 12px; padding: 16px; font-size: 0.9rem; color: var(--primary-indigo); font-weight: 500;'>
     ⚡ Go ahead and explore the <b>AI Chat</b> or test your skills in <b>Quiz Mode</b>!
@@ -85,7 +85,7 @@ def render_planner_ui():
 <span class="material-icons-round" style='font-size: 3.5rem; background: linear-gradient(135deg, #4F46E5, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; display: inline-block;'>calendar_today</span>
 <h2 style='margin-top:0; color: var(--dark-indigo);'>Build Your Success Blueprint</h2>
 <p style='color: var(--text-secondary); font-size: 0.95rem; max-width: 600px; margin: 0 auto;'>
-Define your subject matter, timeframe, and preferred study intensity. Our multi-agent 
+Define your subject matter, timeframe, and preferred study intensity. Our AI 
 tutor network will construct an optimized academic calendar tailored directly to you.
 </p>
 </div>

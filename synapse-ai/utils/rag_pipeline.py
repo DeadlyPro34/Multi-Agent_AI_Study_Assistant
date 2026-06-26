@@ -53,5 +53,7 @@ class VectorStore:
                 pass
 
 def get_vectorstore():
-    """Returns a new VectorStore instance tailored to the current user's session."""
-    return VectorStore()
+    """Returns a VectorStore instance cached in the current user's session."""
+    if "vector_store" not in st.session_state:
+        st.session_state.vector_store = VectorStore()
+    return st.session_state.vector_store

@@ -73,8 +73,6 @@ def render_quiz_ui():
     if "quiz_task_id" not in st.session_state:
         st.session_state.quiz_task_id = None
 
-    if "quiz_task_id" not in st.session_state:
-        st.session_state.quiz_task_id = None
 
     if st.session_state.quiz_task_id:
         auto_poll_quiz()
@@ -148,8 +146,8 @@ def render_quiz_ui():
 <span class="material-icons-round" style='font-size: 3.5rem; background: linear-gradient(135deg, #4F46E5, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; display: inline-block;'>school</span>
 <h2 style='margin-top:0; color: var(--dark-indigo);'>Configure Your Premium Quiz</h2>
 <p style='color: var(--text-secondary); font-size: 0.95rem; max-width: 600px; margin: 0 auto;'>
-Select a topic from your study material, set your desired size, and let the multi-agent strict examiner 
-build a custom quiz specifically tailored to your curriculum.
+Select a topic from your study material, set your desired size, and let the AI 
+strict examiner challenge your understanding.
 </p>
 </div>
 """, unsafe_allow_html=True)

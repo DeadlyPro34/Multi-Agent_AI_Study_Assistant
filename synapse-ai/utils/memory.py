@@ -22,8 +22,8 @@ def clear_memory():
     
     # Clean Vector Store database
     try:
-        from utils.rag_pipeline import VectorStore
-        vector_store = VectorStore()
+        from utils.rag_pipeline import get_vectorstore
+        vector_store = get_vectorstore()
         vector_store.clear()
     except Exception as e:
         print(f"Error clearing vector store: {e}")
