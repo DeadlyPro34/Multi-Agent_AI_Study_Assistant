@@ -1,9 +1,8 @@
 streamlit>=1.32.0
-crewai>=0.28.8
 google-generativeai
 sentence-transformers
 chromadb
-PyPDF2
+pypdf
 python-dotenv
 langchain-google-genai
 langchain

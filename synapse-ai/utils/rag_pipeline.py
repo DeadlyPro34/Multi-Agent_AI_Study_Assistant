@@ -9,7 +9,13 @@ persist_directory = os.path.join(os.path.dirname(os.path.dirname(__file__)), "da
 os.makedirs(persist_directory, exist_ok=True)
 
 class VectorStore:
-    def __init__(self, collection_name="synapse_study_materials"):
+    def __init__(self, collection_name=None):
+        if not collection_name:
+            from streamlit.runtime.scriptrunner import get_script_run_ctx
+            ctx = get_script_run_ctx()
+            session_id = ctx.session_id if ctx else "default"
+            collection_name = f"synapse_{session_id}"
+            
         self.client = chromadb.PersistentClient(path=persist_directory)
         self.collection = self.client.get_or_create_collection(name=collection_name)
 
@@ -46,7 +52,6 @@ class VectorStore:
             except:
                 pass
 
-@st.cache_resource
 def get_vectorstore():
-    """Cache VectorStore instance to avoid reloading on each UI interaction."""
+    """Returns a new VectorStore instance tailored to the current user's session."""
     return VectorStore()
