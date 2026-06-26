@@ -5,25 +5,18 @@ from google import genai
 # ─────────────────────────────────────────────
 # LLM SETUP — Direct, no-nonsense connection
 # ─────────────────────────────────────────────
-def get_client():
-    api_key = os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY not set in .env file.")
-    return genai.Client(api_key=api_key)
+_client = None
 
-# ─────────────────────────────────────────────
-# INTENT DETECTION
-# ─────────────────────────────────────────────
-def detect_agent(query: str) -> str:
-    q = query.lower()
-    if any(w in q for w in ["plan", "schedule", "roadmap", "timetable"]):
-        return "planner"
-    elif any(w in q for w in ["quiz", "mcq", "test", "question"]):
-        return "quiz"
-    elif any(w in q for w in ["summary", "summarize", "notes", "revise"]):
-        return "summary"
-    else:
-        return "explainer"
+def get_client():
+    global _client
+    if _client is None:
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY not set in .env file.")
+        _client = genai.Client(api_key=api_key)
+    return _client
+
+
 
 # ─────────────────────────────────────────────
 # BASE PROMPT TEMPLATE
@@ -67,12 +60,10 @@ def planner_prompt(query: str, context: str) -> str:
     )
 
 def quiz_prompt(query: str, context: str) -> str:
-    return f"""You are an AI quiz generator. Generate 5 MCQ questions based on the content below.
+    return f"""You are an AI quiz generator. {query}
 
 CONTEXT:
-{context if context and context.strip() else "Use your general knowledge about: " + query}
-
-TOPIC: {query}
+{context if context and context.strip() else "Use your general knowledge about the topic."}
 
 OUTPUT FORMAT (strict valid JSON, no other text):
 {{
@@ -86,7 +77,7 @@ OUTPUT FORMAT (strict valid JSON, no other text):
   ]
 }}
 
-Generate exactly 5 questions. Output only the JSON object, nothing else.
+Generate exactly the requested number of questions. Output only the JSON object, nothing else.
 """
 
 def summary_prompt(query: str, context: str) -> str:
@@ -112,12 +103,22 @@ def get_prompt(agent_type: str, query: str, context: str) -> str:
 # ─────────────────────────────────────────────
 # CORE AGENT RUNNER — Clean & Simple
 # ─────────────────────────────────────────────
-def run_agent(query: str, agent_type: str, context: str = "") -> str:
+def run_agent(query: str, agent_type: str, context: str = "", history: list = None) -> str:
     """
     Core function: builds prompt → calls LLM → returns response string.
     No CrewAI orchestration. No multi-agent chaining. Just clean LLM calls.
     """
     prompt = get_prompt(agent_type, query, context)
+    
+    if history:
+        history_to_use = history[:-1] if history[-1].get("role") == "user" and history[-1].get("content") == query else history
+        if history_to_use:
+            hist_text = "CHAT HISTORY:\n"
+            for msg in history_to_use:
+                hist_text += f"{msg['role'].capitalize()}: {msg['content']}\n"
+            hist_text += "\n\n"
+            prompt = hist_text + prompt
+
     client = get_client()
     
     try:
@@ -133,7 +134,7 @@ def run_agent(query: str, agent_type: str, context: str = "") -> str:
 # ─────────────────────────────────────────────
 # LEGACY COMPATIBILITY — keeps all other files working
 # ─────────────────────────────────────────────
-def run_study_crew(task_description: str, task_type: str = "explain", context: str = "") -> str:
+def run_study_crew(task_description: str, task_type: str = "explain", context: str = "", history: list = None) -> str:
     """
     Drop-in replacement for the old CrewAI run_study_crew().
     Maps old task_type names → new agent_type names.
@@ -146,4 +147,4 @@ def run_study_crew(task_description: str, task_type: str = "explain", context: s
         "summary": "summary",
     }
     agent_type = type_map.get(task_type, "explainer")
-    return run_agent(task_description, agent_type, context)
+    return run_agent(task_description, agent_type, context, history)
