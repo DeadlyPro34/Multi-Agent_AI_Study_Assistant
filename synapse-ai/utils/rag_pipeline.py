@@ -52,8 +52,13 @@ class VectorStore:
             except:
                 pass
 
+@st.cache_resource
+def _get_cached_vectorstore(session_id: str):
+    return VectorStore(f"synapse_{session_id}")
+
 def get_vectorstore():
     """Returns a VectorStore instance cached in the current user's session."""
-    if "vector_store" not in st.session_state:
-        st.session_state.vector_store = VectorStore()
-    return st.session_state.vector_store
+    from streamlit.runtime.scriptrunner import get_script_run_ctx
+    ctx = get_script_run_ctx()
+    session_id = ctx.session_id if ctx else "default"
+    return _get_cached_vectorstore(session_id)
