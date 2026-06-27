@@ -24,6 +24,8 @@
 
 /* Hide Streamlit Default elements but KEEP the sidebar toggle button */
 #MainMenu { visibility: hidden !important; }
+[data-testid="stHeader"] { display: none !important; }
+header { visibility: hidden !important; }
 .stDeployButton, .stAppDeployButton, [data-testid="stAppDeployButton"] { display: none !important; }
 footer { visibility: hidden !important; }
 
@@ -284,24 +286,19 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Inputs / Chat Inputs */
-.stChatInputContainer, [data-testid="stChatInput"], .stChatInput {
-    background: rgba(30, 41, 59, 0.8) !important;
-    background-color: rgba(30, 41, 59, 0.8) !important;
-    backdrop-filter: blur(8px);
-    border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+[data-testid="stChatInput"] {
     border-radius: 12px !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Sub-text adjustments inside inputs */
 .stChatInput textarea {
-    color: #ffffff !important;
+    color: var(--text-main) !important;
     background-color: transparent !important;
-    -webkit-text-fill-color: #ffffff !important;
+    -webkit-text-fill-color: var(--text-main) !important;
 }
 
 .stChatInput textarea::placeholder {
-    color: rgba(255, 255, 255, 0.4) !important;
+    color: var(--text-secondary) !important;
 }
 
 /* Left-align all sidebar buttons to prevent "zig-zag" centered alignment */
@@ -411,125 +408,11 @@ tr:hover td {
     font-weight: 450 !important;
 }
 
-/* Floating Neat Chat Input Capsule - Precision DOM Targeted Style */
-/* 1. The Global Outer Fixed Bar - Make 100% Transparent to clear dark overlay */
-[data-testid="stChatInput"] {
-    background: transparent !important;
-    background-image: none !important;
-    background-color: transparent !important;
-    border-top: none !important;
-    box-shadow: none !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-}
-
-/* 2. Intermediate Constraint Wrapper - Force it wide and center it */
-[data-testid="stChatInput"] > div {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    max-width: 840px !important;
-    margin: 0 auto !important;
-    padding: 16px 24px 24px 24px !important; /* Elegant Spacing above and below */
-}
-
-/* 3. The Actual Interactive Pill (Grandchild Div) - The true input capsule */
-[data-testid="stChatInput"] > div > div {
-    background: #2F2F2F !important; /* Elegant Signature Dark Grey */
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 32px !important; /* High-end Pill Capsule */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-    padding: 6px 12px 6px 8px !important; /* Proper balance */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    display: flex !important;
-    flex-direction: row !important; /* LOCK it to horizontal */
-    align-items: center !important;
-    width: 100% !important;
-}
-
-/* High-Fidelity ChatGPT Plus (+) Icon Injection in the Pill */
-[data-testid="stChatInput"] > div > div::before {
-    content: "+";
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    color: #B4B4B4 !important; /* Soft muted gray */
-    font-size: 24px !important;
-    font-weight: 300 !important;
-    padding: 0 12px 0 14px !important;
-    cursor: pointer;
-    display: flex !important;
-    align-items: center !important;
-    user-select: none;
-}
-
-[data-testid="stChatInput"] > div > div:focus-within {
-    background: #232323 !important; /* Deeper charcoal focus */
-    border-color: rgba(255, 255, 255, 0.18) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25) !important;
-    transform: translateY(-1px) !important;
-}
-
-/* Formatter for the textarea component (Light ash text on dark field) */
-[data-testid="stChatInput"] textarea {
-    color: #ECECF1 !important; /* Muted off-white premium text */
-    font-size: 0.95rem !important;
-    font-weight: 400 !important;
-    background: transparent !important;
-    caret-color: #FFFFFF !important;
-    line-height: 1.5 !important;
-}
-
-/* Custom placeholder color override for the textarea */
-[data-testid="stChatInput"] textarea::placeholder {
-    color: #9B9B9B !important;
-    opacity: 0.8 !important;
-}
-
-/* High-Fidelity Circular White Action Button on the right */
-[data-testid="stChatInput"] button {
-    background-color: #FFFFFF !important; /* High-contrast white circular button */
-    border-radius: 50% !important;
-    width: 32px !important;
-    height: 32px !important;
-    min-width: 32px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: none !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
-    margin-right: 4px !important;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease !important;
-}
-
-/* Deep Obsidian Arrow inside the white Send button */
-[data-testid="stChatInput"] button svg {
-    fill: #171717 !important;
-    stroke: #171717 !important;
-    width: 16px !important;
-    height: 16px !important;
-}
-
-[data-testid="stChatInput"] button:hover {
-    transform: scale(1.08) !important;
-    opacity: 0.95 !important;
-    background-color: #FFFFFF !important;
-}
-
-[data-testid="stChatInput"] button:disabled {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    cursor: not-allowed;
-    opacity: 0.5 !important;
-}
-
-[data-testid="stChatInput"] button:disabled svg {
-    fill: rgba(255, 255, 255, 0.5) !important;
-    stroke: rgba(255, 255, 255, 0.5) !important;
-}
+/* -------------------------------------------------------------
+   Removed broken Floating Capsule hacks for Streamlit 1.40.0 
+   which caused the giant black block at the bottom of the screen.
+   Streamlit's default bottom-pinned input works best.
+   ------------------------------------------------------------- */
 
 /* Local Cache Hash Explicit Override - Forces 100% container width to override Streamlit defaults */
 .st-emotion-cache-1y34ygi {
